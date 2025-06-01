@@ -16,13 +16,13 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class AppConfig {
-//    @Value("${cors.allowed.origins}")
-//    private String[] allowedOrigins;
+    @Value("${cors.allowed.origins}")
+    private String[] allowedOrigins;
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -45,13 +45,12 @@ public class AppConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Allow specific origins (replace with frontend URLs)
-//        configuration.setAllowedOrigins(
-//                Arrays.asList(
-////                      "http://localhost:3000"
-//                        allowedOrigins
-//                )
-//        );
-        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedOrigins(
+                Arrays.asList(
+                        "http://localhost:3000"
+                        // allowedOrigins
+                        ));
+        // configuration.setAllowedOriginPatterns(List.of("*"));
 
         // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
@@ -77,8 +76,8 @@ public class AppConfig {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public RestTemplate restTemplate() {
