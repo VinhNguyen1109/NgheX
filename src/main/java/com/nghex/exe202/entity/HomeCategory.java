@@ -1,10 +1,7 @@
 package com.nghex.exe202.entity;
 
 import com.nghex.exe202.util.enums.HomeCategorySection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +16,11 @@ public class HomeCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long  id;
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String name;
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String image;
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String categoryId;
     private HomeCategorySection section;
 }

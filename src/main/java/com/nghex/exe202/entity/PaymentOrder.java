@@ -21,6 +21,7 @@ public class PaymentOrder {
     private Long amount;
     private PaymentOrderStatus status = PaymentOrderStatus.PENDING;
     private PaymentMethod paymentMethod;
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String paymentLinkId;
     @ManyToOne
     private User user;

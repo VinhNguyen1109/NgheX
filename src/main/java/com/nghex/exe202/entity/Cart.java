@@ -22,6 +22,7 @@ public class Cart {
     private int totalItem;
     private int totalMrpPrice;
     private int Discount;
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String couponCode;
     private int couponPrice;
 }

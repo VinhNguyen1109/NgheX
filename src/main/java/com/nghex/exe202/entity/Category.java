@@ -10,6 +10,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
     private Long id;
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String name;
     @NotNull
     @Column(unique = true)

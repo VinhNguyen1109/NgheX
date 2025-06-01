@@ -19,7 +19,7 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String reviewText;
     @Column(nullable = false)
     private double rating;

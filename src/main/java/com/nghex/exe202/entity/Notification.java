@@ -14,6 +14,7 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "recipient_id")
     private User customer;
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String message;
     @Temporal(TemporalType.TIMESTAMP)
     private Date sentAt;

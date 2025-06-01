@@ -17,6 +17,7 @@ public class Seller {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String sellerName;
     private String mobile;
     @Column(unique = true, nullable = false)
