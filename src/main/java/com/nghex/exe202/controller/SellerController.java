@@ -129,8 +129,8 @@ public class SellerController {
         String otp = OtpProvider.generateOTP();
         VerificationCode verificationCode = verificationService.createVerificationCode(otp, seller.getEmail());
 
-        String subject = "ShopNexGen Email Verification Code";
-        String text = "Welcome to ShopNexGen, verify your account using this link ";
+        String subject = "NgheX Email mã xác minh";
+        String text = "Để xác minh tài khoản của bạn vui lòng truy câp đường dẫn ";
         String frontend_url = "http://localhost:3000/verify-seller/";
         emailService.sendVerificationOtpEmail(seller.getEmail(), verificationCode.getOtp(), subject, text + frontend_url);
         return new ResponseEntity<>(savedSeller, HttpStatus.CREATED);

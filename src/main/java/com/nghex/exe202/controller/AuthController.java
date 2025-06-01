@@ -45,7 +45,6 @@ public class AuthController {
             @RequestBody SignupRequest req)
             throws SellerException {
 
-
         String token = authService.createUser(req);
         AuthResponse authResponse = new AuthResponse();
         authResponse.setJwt(token);
