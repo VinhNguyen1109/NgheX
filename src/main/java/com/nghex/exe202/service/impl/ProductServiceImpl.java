@@ -1,5 +1,6 @@
 package com.nghex.exe202.service.impl;
 
+import com.nghex.exe202.dto.ProductTop10Dto;
 import com.nghex.exe202.entity.Category;
 import com.nghex.exe202.entity.Product;
 import com.nghex.exe202.entity.Seller;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -210,5 +212,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getProductBySellerId(Long sellerId) {
         return productRepository.findBySellerId(sellerId);
+    }
+
+    @Override
+    public List<ProductTop10Dto> getTop10() {
+        List<Product> products = productRepository.findTopProducts(PageRequest.of(0, 10));
+
+        return products.stream().map(p -> {
+            String firstImage = (p.getImages() != null && !p.getImages().isEmpty()) ? p.getImages().get(0) : null;
+            return new ProductTop10Dto(
+                    p.getTitle(),
+                    p.getCategory() != null ? p.getCategory().getName() : null,
+                    p.getSellingPrice(),
+                    firstImage
+            );
+        }).collect(Collectors.toList());
     }
 }

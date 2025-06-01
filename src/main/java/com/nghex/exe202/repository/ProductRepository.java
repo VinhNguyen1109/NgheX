@@ -1,6 +1,8 @@
 package com.nghex.exe202.repository;
 
+import com.nghex.exe202.dto.ProductTop10Dto;
 import com.nghex.exe202.entity.Product;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -26,5 +28,9 @@ public interface ProductRepository extends JpaRepository<Product,Long> , JpaSpec
             "OR (:query IS NULL OR LOWER(p.category.categoryId)" +
             " LIKE LOWER(CONCAT('%', :query, '%')))")
     List<Product> searchProduct(@Param("query") String query);
+
+
+    @Query("SELECT p FROM Product p ORDER BY p.id DESC")
+    List<Product> findTopProducts(Pageable pageable);
 
 }

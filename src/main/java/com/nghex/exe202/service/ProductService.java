@@ -1,5 +1,6 @@
 package com.nghex.exe202.service;
 
+import com.nghex.exe202.dto.ProductTop10Dto;
 import com.nghex.exe202.entity.Product;
 import com.nghex.exe202.entity.Seller;
 import com.nghex.exe202.exception.ProductException;
@@ -30,4 +31,7 @@ public interface ProductService {
                                       Integer pageNumber);
     public List<Product> recentlyAddedProduct();
     List<Product> getProductBySellerId(Long sellerId);
+
+
+    List<ProductTop10Dto> getTop10();
 }
