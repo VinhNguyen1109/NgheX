@@ -32,6 +32,7 @@ public class AppConfig {
                         .requestMatchers("/api/products/*/reviews").permitAll() // Allow specific API endpoint
                         .requestMatchers("/api/category/**").permitAll()
                         .requestMatchers("/api/products/getTop10").permitAll()
+                        .requestMatchers("/api/paymentOS/**").permitAll()
                         .requestMatchers("/api/**").authenticated() // Secure all other API endpoints
                         .anyRequest().permitAll() // Allow all other requests
                 )
