@@ -11,4 +11,7 @@ public interface CategoryService {
     List<CategoryDto> getByParentId(Long id);
 
     List<Category> getByLevel(Integer level);
+
+
+    List<Category> getTop10Level3();
 }

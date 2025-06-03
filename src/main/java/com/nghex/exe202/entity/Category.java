@@ -20,5 +20,7 @@ public class Category {
     @NotNull
     private Integer level;
 
+    @Column(name = "image", columnDefinition = "NVARCHAR(500)")
+    private String image;
 
 }

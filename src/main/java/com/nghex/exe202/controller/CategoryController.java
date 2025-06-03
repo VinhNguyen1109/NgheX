@@ -32,4 +32,11 @@ public class CategoryController {
         List<CategoryDto> data = categoryService.getByParentId(id);
         return ResponseEntity.ok(data);
     }
+
+    @GetMapping("/getTop10Level3")
+    public ResponseEntity<List<Category>> getTop10Level3(){
+        List<Category> data = categoryService.getTop10Level3();
+        return ResponseEntity.ok(data);
+    }
+
 }

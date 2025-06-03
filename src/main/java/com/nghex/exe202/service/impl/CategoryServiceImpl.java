@@ -38,6 +38,11 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findByLevel(level);
     }
 
+    @Override
+    public List<Category> getTop10Level3() {
+        return categoryRepository.getTop10ByLevel(3);
+    }
+
     public CategoryDto toDtoRecursive(Category category) {
         CategoryDto dto = new CategoryDto();
         dto.setId(category.getId());

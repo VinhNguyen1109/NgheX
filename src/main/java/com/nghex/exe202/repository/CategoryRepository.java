@@ -16,4 +16,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findTop10ByCategoryIdDesc(Pageable pageable);
 
     List<Category> findByParentCategoryId(Long id);
+
+    List<Category> getTop10ByLevel(Integer level);
+
 }
