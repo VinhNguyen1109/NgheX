@@ -1,0 +1,7 @@
+payos:
+  clientId: 5ad0fe44-36b6-4d6c-8881-0ae717737469
+  apiKey: 807c3996-9b25-4d4f-b21a-72ea6d736c2f
+  checkSumKey: b89e427b1c27612e3a3e20ef31f14b3870b81753ba6aadd708dd47f19c19f657
+  baseUrl : http://localhost:3000
+NgheX:
+  baseUrl : http://localhost:3000

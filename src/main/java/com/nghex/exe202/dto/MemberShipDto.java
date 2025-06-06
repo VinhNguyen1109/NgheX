@@ -1,6 +1,8 @@
 package com.nghex.exe202.dto;
 
+import lombok.Data;
+
+@Data
 public class MemberShipDto {
-    private Long packageId;
-    private String email;
+    private int price;
 }
