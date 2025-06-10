@@ -1,6 +1,6 @@
 package com.nghex.exe202.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,8 +12,9 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JsonIgnore
+
     @ManyToOne
+    @JsonBackReference
     private Cart cart;
     @ManyToOne
     private Product product;
