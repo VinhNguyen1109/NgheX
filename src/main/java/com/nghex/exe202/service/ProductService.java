@@ -1,6 +1,7 @@
 package com.nghex.exe202.service;
 
 import com.nghex.exe202.dto.ProductTop10Dto;
+import com.nghex.exe202.dto.SearchProductDto;
 import com.nghex.exe202.entity.Product;
 import com.nghex.exe202.entity.Seller;
 import com.nghex.exe202.exception.ProductException;
@@ -19,16 +20,7 @@ public interface ProductService {
     public Product findProductById(Long id) throws ProductException;
     public List<Product> searchProduct(String query);
 
-   public Page<Product> getAllProduct(String category,
-                                      String brand,
-                                      String colors,
-                                      String sizes,
-                                      Integer minPrice,
-                                      Integer maxPrice,
-                                      Integer minDiscount,
-                                      String sort,
-                                      String stock,
-                                      Integer pageNumber);
+    Page<Product> getAllProduct(SearchProductDto filter);
     public List<Product> recentlyAddedProduct();
     List<Product> getProductBySellerId(Long sellerId);
 

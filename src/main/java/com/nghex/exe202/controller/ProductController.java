@@ -1,11 +1,13 @@
 package com.nghex.exe202.controller;
 
 import com.nghex.exe202.dto.ProductTop10Dto;
+import com.nghex.exe202.dto.SearchProductDto;
 import com.nghex.exe202.entity.Product;
 import com.nghex.exe202.exception.ProductException;
 import com.nghex.exe202.service.ProductService;
 import com.nghex.exe202.service.SellerService;
 import com.nghex.exe202.service.UserService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -41,8 +43,8 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<Page<Product>> getAllProducts(@RequestParam(required = false) String category,
+    @GetMapping("/getAllProducts")
+    public ResponseEntity<Page<Product>> getAllProducts(@RequestParam(required = false) Integer category,
                                                         @RequestParam(required = false) String brand,
                                                         @RequestParam(required = false) String color,
                                                         @RequestParam(required = false) String size,
@@ -52,12 +54,20 @@ public class ProductController {
                                                         @RequestParam(required = false) String sort,
                                                         @RequestParam(required = false) String stock,
                                                         @RequestParam(defaultValue = "0") Integer pageNumber) {
-        System.out.println("color p -------- " + pageNumber);
+        System.out.println("get product " + pageNumber);
+        SearchProductDto data = SearchProductDto.builder()
+                .categoryId(category)
+                .brand(brand)
+                .color(color)
+                .size(size)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .minDiscount(minDiscount)
+                .sort(sort)
+                .pageNumber(pageNumber)
+                .build();
         return new ResponseEntity<>(
-                productService.getAllProduct(category, brand,
-                        color, size, minPrice,
-                        maxPrice, minDiscount, sort,
-                        stock, pageNumber), HttpStatus.OK);
+                productService.getAllProduct(data), HttpStatus.OK);
     }
 
     @GetMapping("/getTop10")

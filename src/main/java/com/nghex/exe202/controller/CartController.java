@@ -28,14 +28,15 @@ public class CartController {
 	private final CartItemService cartItemService;
 
 
-	@GetMapping
+	@GetMapping("/fetchUserCart")
 	public ResponseEntity<Cart> findUserCartHandler(@RequestHeader("Authorization") String jwt) throws UserException {
 		
 		User user=userService.findUserProfileByJwt(jwt);
 		
-		Cart cart=cartService.findUserCart(user);
+//		Cart cart=cartService.findUserCart(user);
+		Cart cart = new Cart();
 		
-		System.out.println("cart - "+cart.getUser().getEmail());
+//		System.out.println("cart - "+cart.getUser().getEmail());
 		
 		return new ResponseEntity<Cart>(cart,HttpStatus.OK);
 	}

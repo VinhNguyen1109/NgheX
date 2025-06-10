@@ -31,7 +31,7 @@ public class AppConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Allow Swagger UI
                         .requestMatchers("/api/products/*/reviews").permitAll() // Allow specific API endpoint
                         .requestMatchers("/api/category/**").permitAll()
-                        .requestMatchers("/api/products/getTop10").permitAll()
+                        .requestMatchers("/api/products/**").permitAll()
                         .requestMatchers("/api/checkout/**").permitAll()
                         .requestMatchers("/api/**").authenticated() // Secure all other API endpoints
                         .anyRequest().permitAll() // Allow all other requests

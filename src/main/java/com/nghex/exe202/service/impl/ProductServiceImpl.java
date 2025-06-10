@@ -1,6 +1,7 @@
 package com.nghex.exe202.service.impl;
 
 import com.nghex.exe202.dto.ProductTop10Dto;
+import com.nghex.exe202.dto.SearchProductDto;
 import com.nghex.exe202.entity.Category;
 import com.nghex.exe202.entity.Product;
 import com.nghex.exe202.entity.Seller;
@@ -128,81 +129,66 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> getAllProduct(String category,
-                                       String brand,
-                                       String color,
-                                       String size,
-                                       Integer minPrice,
-                                       Integer maxPrice,
-                                       Integer minDiscount,
-                                       String sort,
-                                       String stock,
-                                       Integer pageNumber) {
-        Specification<Product> spec = (root, query, criteriaBuilder) -> {
+    public Page<Product> getAllProduct(SearchProductDto filter) {
+        Specification<Product> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-
-            if (category != null) {
-                Join<Product, Category> categoryJoin = root.join("category");
-//                predicates.add(criteriaBuilder.equal(categoryJoin.get("categoryId"), category));
-//                predicates.add(criteriaBuilder.equal(categoryJoin.get("parentCategory").get("categoryId"), category));
-                Predicate categoryPredicate = criteriaBuilder.or(
-                        criteriaBuilder.equal(categoryJoin.get("categoryId"), category),  // Match categoryId
-                        criteriaBuilder.equal(categoryJoin.get("parentCategory").get("categoryId"), category)  // Match parentCategory.categoryId
-                );
-
-
-                predicates.add(categoryPredicate);
+            // Category filter (match categoryId or parentCategoryId)
+            if (filter.getCategoryId() != null) {
+                predicates.add(cb.equal(root.get("category").get("id"), filter.getCategoryId()));
             }
 
-
-            if (color != null && !color.isEmpty()) {
-                System.out.println("color "+color);
-                predicates.add(criteriaBuilder.equal(root.get("color"), color));
+            if (filter.getBrand() != null && !filter.getBrand().isEmpty()) {
+                predicates.add(cb.equal(root.get("brand"), filter.getBrand()));
             }
 
-            // Filter by size (single value)
-            if (size != null && !size.isEmpty()) {
-                predicates.add(criteriaBuilder.equal(root.get("size"), size));
+            if (filter.getColor() != null && !filter.getColor().isEmpty()) {
+                predicates.add(cb.equal(root.get("color"), filter.getColor()));
             }
 
-            if (minPrice != null) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("sellingPrice"),
-                        minPrice));
+            if (filter.getSize() != null && !filter.getSize().isEmpty()) {
+                predicates.add(cb.equal(root.get("size"), filter.getSize()));
             }
 
-            if (maxPrice != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("sellingPrice"),
-                        maxPrice));
+            if (filter.getMinPrice() != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("sellingPrice"), filter.getMinPrice()));
             }
 
-            if (minDiscount != null) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("discountPercent"),
-                        minDiscount));
+            if (filter.getMaxPrice() != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("sellingPrice"), filter.getMaxPrice()));
             }
 
-            if (stock != null) {
-                predicates.add(criteriaBuilder.equal(root.get("stock"), stock));
+            if (filter.getMinDiscount() != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("discountPercent"), filter.getMinDiscount()));
             }
 
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            if (filter.getStock() != null) {
+                predicates.add(cb.equal(root.get("stock"), filter.getStock()));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
         };
-        Pageable pageable;
-        if (sort != null && !sort.isEmpty()) {
-            pageable = switch (sort) {
-                case "price_low" ->
-                        PageRequest.of(pageNumber != null ? pageNumber : 0, 10, Sort.by("sellingPrice").ascending());
-                case "price_high" ->
-                        PageRequest.of(pageNumber != null ? pageNumber : 0, 10, Sort.by("sellingPrice").descending());
-                default -> PageRequest.of(pageNumber != null ? pageNumber : 0, 10, Sort.unsorted());
-            };
-        } else {
-            pageable = PageRequest.of(pageNumber != null ? pageNumber : 0, 10, Sort.unsorted());
-        }
 
+        int page = filter.getPageNumber() != null && filter.getPageNumber() >= 0 ? filter.getPageNumber() : 0;
+        Pageable pageable = createPageable(filter.getSort(), page);
 
         return productRepository.findAll(spec, pageable);
     }
+    private Pageable createPageable(String sort, int pageNumber) {
+        final int PAGE_SIZE = 10;
+
+        if (sort == null || sort.isEmpty()) {
+            return PageRequest.of(pageNumber, PAGE_SIZE);
+        }
+
+        return switch (sort) {
+            case "price_low" -> PageRequest.of(pageNumber, PAGE_SIZE, Sort.by("sellingPrice").ascending());
+            case "price_high" -> PageRequest.of(pageNumber, PAGE_SIZE, Sort.by("sellingPrice").descending());
+            default -> PageRequest.of(pageNumber, PAGE_SIZE);
+        };
+    }
+
+
 
     @Override
     public List<Product> recentlyAddedProduct() {

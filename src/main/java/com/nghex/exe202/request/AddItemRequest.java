@@ -12,7 +12,4 @@ public class AddItemRequest {
 	private String size;
 	private int quantity;
 	private Integer price;
-	
-
-	
 }

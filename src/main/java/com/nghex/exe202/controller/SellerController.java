@@ -153,6 +153,7 @@ public class SellerController {
     @GetMapping("/report")
     public ResponseEntity<SellerReport> getSellerReport(
             @RequestHeader("Authorization") String jwt) throws SellerException {
+        System.out.println("check get report");
         String email = jwtProvider.getEmailFromJwtToken(jwt);
         Seller seller = sellerService.getSellerByEmail(email);
         SellerReport report = sellerReportService.getSellerReport(seller);

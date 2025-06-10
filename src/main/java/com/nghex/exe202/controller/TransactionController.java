@@ -34,8 +34,9 @@ public class TransactionController {
     @GetMapping("/seller")
     public ResponseEntity<List<Transaction>> getTransactionBySeller(
             @RequestHeader("Authorization") String jwt) throws SellerException {
+        System.out.println("check: " + jwt);
         Seller seller=sellerService.getSellerProfile(jwt);
-
+        System.out.println("seller: " + seller.getEmail());
         List<Transaction> transactions = transactionService.getTransactionBySeller(seller);
         return ResponseEntity.ok(transactions);
     }
