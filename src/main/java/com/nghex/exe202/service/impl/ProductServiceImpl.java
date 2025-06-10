@@ -33,59 +33,6 @@ public class ProductServiceImpl implements ProductService {
     
     private final CategoryRepository categoryRepository;
 
-    @Override
-    public Product createProduct(CreateProductRequest req,
-
-                                 Seller seller
-                                 ) throws ProductException {
-
-        int discountPercentage = calculateDiscountPercentage(req.getMrpPrice(), req.getSellingPrice());
-
-        Category category1=categoryRepository.findByCategoryId(req.getCategory());
-        if(category1==null){
-            Category category=new Category();
-            category.setCategoryId(req.getCategory());
-            category.setLevel(1);
-            category.setName(req.getCategory().replace("_"," "));
-            category1=categoryRepository.save(category);
-        }
-
-        Category category2=categoryRepository.findByCategoryId(req.getCategory2());
-        if(category2==null){
-            Category category=new Category();
-            category.setCategoryId(req.getCategory2());
-            category.setLevel(2);
-            category.setParentCategory(category1);
-            category.setName(req.getCategory2().replace("_"," "));
-            category2=categoryRepository.save(category);
-        }
-        Category category3=categoryRepository.findByCategoryId(req.getCategory3());
-        if(category3==null){
-            Category category=new Category();
-            category.setCategoryId(req.getCategory3());
-            category.setLevel(3);
-            category.setParentCategory(category2);
-            category.setName(req.getCategory3().replace("_"," "));
-            category3=categoryRepository.save(category);
-        }
-        
-        Product product=new Product();
-
-        product.setSeller(seller);
-        product.setCategory(category3);
-        product.setTitle(req.getTitle());
-        product.setColor(req.getColor());
-        product.setDescription(req.getDescription());
-        product.setDiscountPercent(discountPercentage);
-        product.setSellingPrice(req.getSellingPrice());
-        product.setImages(req.getImages());
-        product.setMrpPrice(req.getMrpPrice());
-        product.setSizes(req.getSizes());
-        product.setCreatedAt(LocalDateTime.now());
-
-        return productRepository.save(product);
-    }
-
     public static int calculateDiscountPercentage(double mrpPrice, double sellingPrice) {
         if (mrpPrice <= 0) {
             throw new IllegalArgumentException("Actual price must be greater than zero.");
@@ -214,4 +161,34 @@ public class ProductServiceImpl implements ProductService {
             );
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public Product createProduct(CreateProductRequest req, Seller seller) throws ProductException {
+        int discountPercentage = calculateDiscountPercentage(req.getMrpPrice(), req.getSellingPrice());
+
+
+        Category category1 = categoryRepository.findById(Long.parseLong(req.getCategory()))
+                .orElseThrow(() -> new ProductException("Category1 not found"));
+        Category category2 = categoryRepository.findById(Long.parseLong(req.getCategory2()))
+                .orElseThrow(() -> new ProductException("Category2 not found"));
+        Category category3 = categoryRepository.findById(Long.parseLong(req.getCategory3()))
+                .orElseThrow(() -> new ProductException("Category3 not found"));
+
+        Product product = new Product();
+        product.setSeller(seller);
+        product.setCategory(category3);
+        product.setTitle(req.getTitle());
+        product.setColor(req.getColor());
+        product.setDescription(req.getDescription());
+        product.setDiscountPercent(discountPercentage);
+        product.setSellingPrice(req.getSellingPrice());
+        product.setImages(req.getImages());
+        product.setMrpPrice(req.getMrpPrice());
+        product.setSizes(req.getSizes());
+        product.setCreatedAt(LocalDateTime.now());
+        product.setQuantity(1000);
+
+        return productRepository.save(product);
+    }
+
 }
