@@ -33,6 +33,7 @@ public class AppConfig {
                         .requestMatchers("/api/category/**").permitAll()
                         .requestMatchers("/api/products/**").permitAll()
                         .requestMatchers("/api/checkout/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/logs/**").permitAll() // Secure all other API endpoints
                         .requestMatchers("/api/**").authenticated() // Secure all other API endpoints
                         .anyRequest().permitAll() // Allow all other requests
@@ -51,7 +52,9 @@ public class AppConfig {
         // Allow specific origins (replace with frontend URLs)
         configuration.setAllowedOrigins(
                 Arrays.asList(
-                        "http://localhost:3000"
+                        "http://localhost:3000",
+                        "http://localhost:3001",
+                        "http://localhost:3002"
                         // allowedOrigins
                         ));
         // configuration.setAllowedOriginPatterns(List.of("*"));

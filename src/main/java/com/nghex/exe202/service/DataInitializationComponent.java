@@ -9,6 +9,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DataInitializationComponent implements CommandLineRunner {
@@ -20,22 +23,30 @@ public class DataInitializationComponent implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        initializeAdminUser();
+        initializeAdminUsers();
     }
 
-    private void initializeAdminUser() {
-        String adminUsername = "vinhnguyen11092003@gmail.com";
+    private void initializeAdminUsers() {
+        List<String> adminEmails = Arrays.asList(
+                "vinhnguyen11092003@gmail.com",
+                "anhnttha170133@fpt.edu.vn",
+                "Huyenntkha163073@fpt.edu.vn",
+                "Thuylpha170098@fpt.edu.vn",
+                "nguyencongvinh69@gmail.com"
+        );
 
-        if (userRepository.findByEmail(adminUsername)==null) {
-            User adminUser = new User();
+        for (String email : adminEmails) {
+            if (userRepository.findByEmail(email) == null) {
+                User adminUser = new User();
+                adminUser.setPassword(passwordEncoder.encode("vinh11092003"));
+                adminUser.setFullName("Admin");
+                adminUser.setEmail(email);
+                adminUser.setRole(USER_ROLE.ROLE_ADMIN);
 
-            adminUser.setPassword(passwordEncoder.encode("vinh11092003"));
-            adminUser.setFullName("Admin");
-            adminUser.setEmail(adminUsername);
-            adminUser.setRole(USER_ROLE.ROLE_ADMIN);
-
-            User admin=userRepository.save(adminUser);
+                userRepository.save(adminUser);
+            }
         }
     }
+
 
 }

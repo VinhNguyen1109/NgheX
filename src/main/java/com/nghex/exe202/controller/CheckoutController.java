@@ -60,8 +60,13 @@ public class CheckoutController {
             String currentTimeString = String.valueOf(new Date().getTime());
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
             ItemData item = ItemData.builder().name(productName).quantity(1).price(payload.getPrice()).build();
-            PaymentData paymentData = PaymentData.builder().orderCode(orderCode).amount(payload.getPrice()).description(description)
-                    .returnUrl(returnUrl).cancelUrl(cancelUrl).item(item).build();
+            PaymentData paymentData = PaymentData.builder()
+                    .orderCode(orderCode)
+                    .amount(payload.getPrice())
+                    .description(payload.getProductDescription())
+                    .returnUrl(payload.getReturnUrl())
+                    .cancelUrl(payload.getCancelUrl())
+                    .item(item).build();
             CheckoutResponseData data = payOS.createPaymentLink(paymentData);
 
             return data.getCheckoutUrl();
