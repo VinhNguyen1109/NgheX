@@ -1,6 +1,7 @@
 package com.nghex.exe202.controller;
 
 import com.nghex.exe202.dto.MemberShipDto;
+import com.nghex.exe202.dto.ProductPaymentDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +33,7 @@ public class CheckoutController {
             final String description = "Thanh toan goi thanh vien";
             final String returnUrl = baseUrl + "/seller/membershipSuccess";
             final String cancelUrl = baseUrl + "/seller/membershipSuccess";
-            final int price = 3000;
+            final int price = payload.getPrice();
             // Gen order code
             String currentTimeString = String.valueOf(new Date().getTime());
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
@@ -47,5 +48,26 @@ public class CheckoutController {
         }
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/create-payment-link-product")
+    public String checkoutProduct(@RequestBody ProductPaymentDto payload) throws Exception {
+        try {
+            final String productName = payload.getProductName();
+            final String description = payload.getProductDescription();
+            final String returnUrl = payload.getReturnUrl();
+            final String cancelUrl = payload.getCancelUrl();
+            final int price = payload.getPrice();
+            // Gen order code
+            String currentTimeString = String.valueOf(new Date().getTime());
+            long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
+            ItemData item = ItemData.builder().name(productName).quantity(1).price(payload.getPrice()).build();
+            PaymentData paymentData = PaymentData.builder().orderCode(orderCode).amount(payload.getPrice()).description(description)
+                    .returnUrl(returnUrl).cancelUrl(cancelUrl).item(item).build();
+            CheckoutResponseData data = payOS.createPaymentLink(paymentData);
+
+            return data.getCheckoutUrl();
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
+    }
 
 }
