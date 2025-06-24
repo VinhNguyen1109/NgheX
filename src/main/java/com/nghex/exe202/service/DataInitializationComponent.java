@@ -32,7 +32,9 @@ public class DataInitializationComponent implements CommandLineRunner {
                 "anhnttha170133@fpt.edu.vn",
                 "Huyenntkha163073@fpt.edu.vn",
                 "Thuylpha170098@fpt.edu.vn",
-                "nguyencongvinh69@gmail.com"
+                "nguyencongvinh69@gmail.com",
+                "Trungtuyen2003vp@gmail.com",
+                "thaindhe186951@fpt.edu.vn"
         );
 
         for (String email : adminEmails) {

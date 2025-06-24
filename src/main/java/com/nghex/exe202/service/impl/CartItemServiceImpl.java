@@ -6,6 +6,7 @@ import com.nghex.exe202.exception.CartItemException;
 import com.nghex.exe202.exception.UserException;
 import com.nghex.exe202.repository.CartItemRepository;
 import com.nghex.exe202.service.CartItemService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,7 @@ public class CartItemServiceImpl implements CartItemService {
 	
 
 	@Override
+	@Transactional
 	public void removeCartItem(Long userId,Long cartItemId)
 			throws CartItemException,
 			UserException {
@@ -59,7 +61,15 @@ public class CartItemServiceImpl implements CartItemService {
 		User cartItemUser=cartItem.getCart().getUser();
 
 		if(cartItemUser.getId().equals(userId)) {
-			cartItemRepository.deleteById(cartItem.getId());
+			System.out.println("check cartItemId "+cartItemId);
+			try {
+				cartItemRepository.deleteCartItemById(cartItemId);
+				System.out.println("chjeckkkkk");
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+
+
 		}
 		else {
 			throw new UserException("you can't remove another users item");
