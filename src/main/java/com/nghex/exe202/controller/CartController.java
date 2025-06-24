@@ -34,6 +34,15 @@ public class CartController {
 		return ResponseEntity.ok(dto);
 	}
 
+	@GetMapping("/clearUserCart")
+	public ResponseEntity<String> clearUserCartHandler(@RequestHeader("Authorization") String jwt) throws UserException {
+		User user = userService.findUserProfileByJwt(jwt);
+		if(user != null) {
+			cartService.clearCart(user);
+		}
+		return ResponseEntity.ok("OK");
+	}
+
 
 	@PutMapping("/add")
 	public ResponseEntity<CartItem> addItemToCart(@RequestBody AddItemRequest req,

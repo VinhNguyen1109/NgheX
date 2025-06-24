@@ -15,4 +15,5 @@ public interface CartService {
 								int quantity) throws ProductException;
 	public Cart findUserCart(User user);
 
+	public void clearCart(User user);
 }
