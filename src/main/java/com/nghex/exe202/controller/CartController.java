@@ -1,5 +1,6 @@
 package com.nghex.exe202.controller;
 
+import com.nghex.exe202.dto.CartDTO;
 import com.nghex.exe202.entity.Cart;
 import com.nghex.exe202.entity.CartItem;
 import com.nghex.exe202.entity.Product;
@@ -9,10 +10,7 @@ import com.nghex.exe202.exception.ProductException;
 import com.nghex.exe202.exception.UserException;
 import com.nghex.exe202.request.AddItemRequest;
 import com.nghex.exe202.response.ApiResponse;
-import com.nghex.exe202.service.CartItemService;
-import com.nghex.exe202.service.CartService;
-import com.nghex.exe202.service.ProductService;
-import com.nghex.exe202.service.UserService;
+import com.nghex.exe202.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,25 +27,21 @@ public class CartController {
 
 
 	@GetMapping("/fetchUserCart")
-	public ResponseEntity<Cart> findUserCartHandler(@RequestHeader("Authorization") String jwt) throws UserException {
-		
-		User user=userService.findUserProfileByJwt(jwt);
-		
-//		Cart cart=cartService.findUserCart(user);
-		Cart cart = new Cart();
-		
-//		System.out.println("cart - "+cart.getUser().getEmail());
-		
-		return new ResponseEntity<Cart>(cart,HttpStatus.OK);
+	public ResponseEntity<CartDTO> findUserCartHandler(@RequestHeader("Authorization") String jwt) throws UserException {
+		User user = userService.findUserProfileByJwt(jwt);
+		Cart cart = cartService.findUserCart(user);
+		CartDTO dto = CartMapper.toDTO(cart);
+		return ResponseEntity.ok(dto);
 	}
-	
+
+
 	@PutMapping("/add")
 	public ResponseEntity<CartItem> addItemToCart(@RequestBody AddItemRequest req,
 												  @RequestHeader("Authorization") String jwt) throws UserException, ProductException {
-		
 		User user=userService.findUserProfileByJwt(jwt);
+		System.out.println(user.getEmail());
 		Product product=productService.findProductById(req.getProductId());
-		
+		System.out.println(product.getId());
 		CartItem item = cartService.addCartItem(user,
 				product,
 				req.getSize(),

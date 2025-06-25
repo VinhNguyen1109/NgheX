@@ -50,7 +50,8 @@ public class AppConfig {
         // Allow specific origins (replace with frontend URLs)
         configuration.setAllowedOrigins(
                 Arrays.asList(
-                        "http://localhost:3000"
+                        "http://localhost:3000",
+                        "https://nghex.short-job.com"
                         // allowedOrigins
                         ));
         // configuration.setAllowedOriginPatterns(List.of("*"));
