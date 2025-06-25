@@ -60,7 +60,21 @@ public class CartServiceImpl implements CartService {
         }
     }
 
-
+    @Override
+    public void clearCart(User user) {
+        System.out.println("========= clear cart ===========");
+        try {
+            Cart cart = cartRepository.findByUserId(user.getId());
+            if(cart != null) {
+                for (CartItem item : cart.getCartItems()) {
+                    cartItemRepository.deleteCartItemById(item.getId());
+                }
+                cartRepository.deleteAllCartForUser(user.getId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public static int calculateDiscountPercentage(double mrpPrice, double sellingPrice) {

@@ -131,7 +131,7 @@ public class SellerController {
 
         String subject = "NgheX Email mã xác minh";
         String text = "Để xác minh tài khoản của bạn vui lòng truy câp đường dẫn ";
-        String frontend_url = "http://localhost:3000/verify-seller/";
+        String frontend_url = "https://nghex.short-job.com/verify-seller/";
         emailService.sendVerificationOtpEmail(seller.getEmail(), verificationCode.getOtp(), subject, text + frontend_url);
         return new ResponseEntity<>(savedSeller, HttpStatus.CREATED);
     }

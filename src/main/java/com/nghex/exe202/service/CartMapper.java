@@ -39,7 +39,7 @@ public class CartMapper {
                 toProductDTO(item.getProduct()),
                 item.getUserID()
         );
-    }
+    }   
 
     public static ProductDTO2 toProductDTO(Product product) {
         if (product == null) return null;
