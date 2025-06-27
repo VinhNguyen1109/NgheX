@@ -7,8 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -77,6 +76,33 @@ public class ScreenAccessLogServiceImpl implements ScreenAccessLogService {
 
     @Override
     public void save(ScreenAccessLog log) {
-        repository.save(log);
+        List<ScreenAccessLog> data = new ArrayList<>();
+
+        // Lấy bản ghi cuối của user mà chưa có left_at (tức là chưa kết thúc)
+        ScreenAccessLog preScreen = repository.findTopByUserIdAndLeftAtIsNullOrderByAccessedAtDesc(log.getUserId());
+
+        if (preScreen != null) {
+            System.out.println(preScreen.getLogId());
+            preScreen.setLeftAt(log.getAccessedAt());
+            data.add(preScreen);
+        }
+
+        data.add(log); // log hiện tại
+        repository.saveAll(data);
     }
+
+    @Override
+    public List<Map<String, Object>> getAverageTimePerScreen() {
+        List<Object[]> raw = repository.getAverageTimePerScreen();
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Object[] row : raw) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("screenName", row[0]);
+            map.put("avgDurationSec", row[1]);
+            result.add(map);
+        }
+        return result;
+    }
+
+
 }

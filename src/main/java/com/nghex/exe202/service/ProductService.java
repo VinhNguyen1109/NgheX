@@ -1,5 +1,6 @@
 package com.nghex.exe202.service;
 
+import com.nghex.exe202.dto.ProductAdminDto;
 import com.nghex.exe202.dto.ProductTop10Dto;
 import com.nghex.exe202.dto.SearchProductDto;
 import com.nghex.exe202.entity.Product;
@@ -26,4 +27,8 @@ public interface ProductService {
 
 
     List<ProductTop10Dto> getTop10();
+
+    List<ProductAdminDto> getAllProductByAdmin();
+
+    void deleteById(Long id);
 }

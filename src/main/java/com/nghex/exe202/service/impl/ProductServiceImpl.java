@@ -1,5 +1,6 @@
 package com.nghex.exe202.service.impl;
 
+import com.nghex.exe202.dto.ProductAdminDto;
 import com.nghex.exe202.dto.ProductTop10Dto;
 import com.nghex.exe202.dto.SearchProductDto;
 import com.nghex.exe202.entity.Category;
@@ -160,6 +161,27 @@ public class ProductServiceImpl implements ProductService {
                     firstImage
             );
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductAdminDto> getAllProductByAdmin() {
+        List<Product> products = productRepository.findAll();
+        List<ProductAdminDto> productAdminDtos = new ArrayList<>();
+        for(Product product : products) {
+            ProductAdminDto productAdminDto = ProductAdminDto.builder()
+                    .id(product.getId())
+                    .title(product.getTitle())
+                    .images(product.getImages())
+                    .sellerEmail(product.getSeller().getEmail())
+                    .build();
+            productAdminDtos.add(productAdminDto);
+        }
+        return productAdminDtos;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        productRepository.findById(id).ifPresent(productRepository::delete);
     }
 
     @Override

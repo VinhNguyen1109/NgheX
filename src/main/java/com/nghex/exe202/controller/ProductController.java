@@ -1,9 +1,11 @@
 package com.nghex.exe202.controller;
 
+import com.nghex.exe202.dto.ProductAdminDto;
 import com.nghex.exe202.dto.ProductTop10Dto;
 import com.nghex.exe202.dto.SearchProductDto;
 import com.nghex.exe202.entity.Product;
 import com.nghex.exe202.exception.ProductException;
+import com.nghex.exe202.service.EmailService;
 import com.nghex.exe202.service.ProductService;
 import com.nghex.exe202.service.SellerService;
 import com.nghex.exe202.service.UserService;
@@ -28,6 +30,26 @@ public class ProductController {
 
     private final SellerService sellerService;
 
+    private final EmailService emailService;
+
+
+    @DeleteMapping("/api/products/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        productService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("/get-all-product")
+    public ResponseEntity<?> getAllProductsAdmin() {
+        return new ResponseEntity<>(productService.getAllProductByAdmin() ,HttpStatus.OK);
+    }
+
+    @PostMapping("/send-warning")
+    public ResponseEntity<?> sendWarning(@RequestBody ProductAdminDto data) {
+        emailService.sendWarningProductEmail(data.getSellerEmail(), data.getTitle());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @GetMapping("/{productId}")
     public ResponseEntity<Product> getProductById(@PathVariable Long productId) throws ProductException {

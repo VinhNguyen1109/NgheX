@@ -75,8 +75,8 @@ public class AuthServiceImpl implements AuthService {
         verificationCode.setEmail(email);
         verificationCodeRepository.save(verificationCode);
 
-        String subject = "shopnexgen Login/Signup Otp";
-        String text = "your login otp is - ";
+        String subject = "Mã OTP từ website NghệX";
+        String text = "Mã OTP của bạn là - ";
         emailService.sendVerificationOtpEmail(email, otp, subject, text);
     }
 

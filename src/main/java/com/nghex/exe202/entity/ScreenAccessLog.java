@@ -29,6 +29,10 @@ public class ScreenAccessLog {
     @Column(name = "accessed_at", columnDefinition = "DATETIME", nullable = false)
     private Date accessedAt;
 
+
+    @Column(name = "left_at", columnDefinition = "DATETIME")
+    private Date leftAt;
+
     @Override
     public String toString() {
         return "ScreenAccessLog{" +

@@ -6,13 +6,10 @@ import com.nghex.exe202.entity.User;
 import com.nghex.exe202.exception.UserException;
 import com.nghex.exe202.service.ScreenAccessLogService;
 import com.nghex.exe202.service.UserService;
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -100,23 +97,25 @@ public class ScreenAccessLogController {
                                             @RequestBody Map<String, String> body) throws UserException {
 
         String screenName = body.get("screenName");
-
         if (jwt == null || !jwt.startsWith("Bearer ")) {
             return ResponseEntity.status(401).build();
         }
         User user = userService.findUserProfileByJwt(jwt);
-
-        System.out.println("user " + user.getEmail());
         ScreenAccessLog log = ScreenAccessLog.builder()
                 .userId(user.getId().intValue())
                 .screenName(screenName)
                 .accessedAt(new Date())
                 .build();
-        System.out.println("checkkkk");
         System.out.println(log.toString());
         logService.save(log);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/stats/screen/avg-duration")
+    public ResponseEntity<List<Map<String, Object>>> avgTimePerScreen() {
+        return ResponseEntity.ok(logService.getAverageTimePerScreen());
+    }
+
 
 
 }

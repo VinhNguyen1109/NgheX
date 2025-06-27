@@ -4,6 +4,7 @@ import com.nghex.exe202.entity.ScreenAccessLog;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface ScreenAccessLogService {
 
@@ -32,4 +33,6 @@ public interface ScreenAccessLogService {
     List<Integer> getInactiveUserIdsSince(Date cutoff);
 
     void save(ScreenAccessLog log);
+
+     List<Map<String, Object>> getAverageTimePerScreen();
 }

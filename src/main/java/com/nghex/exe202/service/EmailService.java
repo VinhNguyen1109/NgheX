@@ -66,6 +66,55 @@ public class EmailService {
         }
 
     }
+
+    public void sendWarningProductEmail(String sellerEmail, String productTitle) {
+        try {
+            // Validate email
+            if (!isValidEmail(sellerEmail)) {
+                logger.error("Invalid email address: {}", sellerEmail);
+                throw new IllegalArgumentException("Invalid email format: " + sellerEmail);
+            }
+
+            String subject = "⚠️ Cảnh báo về sản phẩm không hợp lệ";
+            String htmlContent = """
+                <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px;">
+                    <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px;
+                                box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 20px;">
+                        <h2 style="color: #d9534f; text-align: center;">⚠️ Cảnh cáo vi phạm sản phẩm</h2>
+                        <p>Xin chào <strong>%s</strong>,</p>
+                        <p>Sản phẩm của bạn với tiêu đề:</p>
+                        <div style="font-size: 18px; font-weight: bold; color: #333; padding: 10px 0;">
+                            "%s"
+                        </div>
+                        <p>Hiện tại không đáp ứng đúng tiêu chuẩn hoặc chính sách của website.</p>
+                        <p>Vui lòng chỉnh sửa thông tin sản phẩm để đảm bảo phù hợp với quy định. Nếu vi phạm tiếp diễn, tài khoản của bạn có thể bị tạm ngưng hoặc ban vĩnh viễn.</p>
+                        <p style="margin-top: 20px;">Cảm ơn sự hợp tác của bạn.</p>
+                        <p style="margin-top: 30px;">Trân trọng,<br/>Bộ phận kiểm duyệt nội dung</p>
+                    </div>
+                </div>
+            """.formatted(sellerEmail, productTitle);
+
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true);
+            helper.setTo(sellerEmail);
+
+            javaMailSender.send(mimeMessage);
+
+            logger.info("Warning email sent to seller: {}", sellerEmail);
+
+        } catch (MailException e) {
+            logger.error("Failed to send warning email to {}: {}", sellerEmail, e.getMessage());
+            throw new MailSendException("Failed to send email: " + e.getMessage(), e);
+        } catch (MessagingException e) {
+            logger.error("MessagingException while sending warning email to {}: {}", sellerEmail, e.getMessage());
+            throw new RuntimeException("Error while constructing email: " + e.getMessage(), e);
+        }
+    }
+
+
+
       /*
     public void sendVerificationOtpEmail(String userEmail, String otp, String subject, String text) throws MessagingException, MailSendException {
 

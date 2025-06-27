@@ -74,4 +74,19 @@ public interface ScreenAccessLogRepository extends JpaRepository<ScreenAccessLog
     @Query("SELECT u.id FROM User u WHERE u.id NOT IN (" +
             "SELECT DISTINCT s.userId FROM ScreenAccessLog s WHERE s.accessedAt >= :cutoff)")
     List<Integer> findInactiveUserIds(Date cutoff);
+
+
+    ScreenAccessLog findTopByUserIdOrderByAccessedAtDesc(Integer userId);
+
+
+    ScreenAccessLog findTopByUserIdAndLeftAtIsNullOrderByAccessedAtDesc(Integer userId);
+
+    @Query(value = "SELECT screen_name, AVG(DATEDIFF(SECOND, accessed_at, left_at)) " +
+            "FROM screen_access_log " +
+            "WHERE left_at IS NOT NULL " +
+            "GROUP BY screen_name",
+            nativeQuery = true)
+    List<Object[]> getAverageTimePerScreen();
+
+
 }
