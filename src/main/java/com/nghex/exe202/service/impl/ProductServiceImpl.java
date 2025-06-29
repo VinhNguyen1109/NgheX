@@ -1,6 +1,7 @@
 package com.nghex.exe202.service.impl;
 
 import com.nghex.exe202.dto.ProductAdminDto;
+import com.nghex.exe202.dto.ProductDetailDto;
 import com.nghex.exe202.dto.ProductTop10Dto;
 import com.nghex.exe202.dto.SearchProductDto;
 import com.nghex.exe202.entity.Category;
@@ -50,13 +51,44 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
-    @Override
-    public Product updateProduct(Long productId, Product product) throws ProductException {
-        productRepository.findById(productId);
-        product.setId(productId);
-        return productRepository.save(product);
+//    @Override
+//    public Product updateProduct(Long productId, Product product) throws ProductException {
+//        productRepository.findById(productId);
+//        product.setId(productId);
+//        return productRepository.save(product);
+//
+//    }
 
+    @Override
+    public Product updateProduct(Long productId, CreateProductRequest req) throws ProductException {
+        Product product = findProductById(productId);
+
+        int discountPercentage = calculateDiscountPercentage(req.getMrpPrice(), req.getSellingPrice());
+
+        Category category1 = categoryRepository.findById(Long.parseLong(req.getCategory()))
+                .orElseThrow(() -> new ProductException("Category1 not found"));
+        Category category2 = categoryRepository.findById(Long.parseLong(req.getCategory2()))
+                .orElseThrow(() -> new ProductException("Category2 not found"));
+        Category category3 = categoryRepository.findById(Long.parseLong(req.getCategory3()))
+                .orElseThrow(() -> new ProductException("Category3 not found"));
+
+        product.setCategory(category3);
+        product.setTitle(req.getTitle());
+        product.setColor(req.getColor());
+        product.setDescription(req.getDescription());
+        product.setDiscountPercent(discountPercentage);
+        product.setSellingPrice(req.getSellingPrice());
+        product.setImages(req.getImages());
+        product.setMrpPrice(req.getMrpPrice());
+        product.setSizes(req.getSizes());
+        // product.setQuantity(req.getQuantity());
+        // product.setUpdatedAt(LocalDateTime.now());
+
+        return productRepository.save(product);
     }
+
+
+
 
     @Override
     public Product updateProductStock(Long productId) throws ProductException {
@@ -212,5 +244,29 @@ public class ProductServiceImpl implements ProductService {
 
         return productRepository.save(product);
     }
+
+    @Override
+    public ProductDetailDto productDetail(Long id) throws ProductException {
+        Product product = findProductById(id);
+
+        // Lấy category3 là category gắn với product
+        Category category3 = product.getCategory();
+        Category category2 = category3 != null ? category3 : null;
+        Category category1 = category2 != null ? category2 : null;
+
+        return new ProductDetailDto(
+                product.getTitle(),
+                product.getDescription(),
+                product.getMrpPrice(),
+                product.getSellingPrice(),
+                product.getColor(),
+                product.getImages(),
+                category1 != null ? category1.getId() : null,
+                category2 != null ? category2.getId() : null,
+                category3 != null ? category3.getId() : null,
+                product.getSizes()
+        );
+    }
+
 
 }

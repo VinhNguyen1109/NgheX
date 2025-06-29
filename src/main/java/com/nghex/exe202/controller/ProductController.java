@@ -1,6 +1,7 @@
 package com.nghex.exe202.controller;
 
 import com.nghex.exe202.dto.ProductAdminDto;
+import com.nghex.exe202.dto.ProductDetailDto;
 import com.nghex.exe202.dto.ProductTop10Dto;
 import com.nghex.exe202.dto.SearchProductDto;
 import com.nghex.exe202.entity.Product;
@@ -59,6 +60,13 @@ public class ProductController {
 
     }
 
+    @GetMapping("/detail/{productId}")
+    public ResponseEntity<ProductDetailDto> getProductDetail(@PathVariable Long productId) throws ProductException {
+        ProductDetailDto dto = productService.productDetail(productId);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+
     @GetMapping("/search")
     public ResponseEntity<List<Product>> searchProduct(@RequestParam(required = false) String query) {
         List<Product> products = productService.searchProduct(query);
@@ -97,4 +105,15 @@ public class ProductController {
         List<ProductTop10Dto> products = productService.getTop10();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
+//    @PutMapping("/api/products/{id}")
+//    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product product) {
+//        try {
+//            Product updatedProduct = productService.updateProduct(id, product);
+//            return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+//        } catch (ProductException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+//        }
+//    }
+
 }
